@@ -5,7 +5,7 @@
 
 export default {
   async fetch(req, env) {
-  const u = new URL(req.url);
+  const u = new URL(req.url);  
 
   if (u.pathname === '/api/register' && req.method === 'POST')
     return reg(req, env);
