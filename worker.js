@@ -1,28 +1,28 @@
-// worker.js
+// worker.js    
 // 轻量级虚拟备案系统（≤13KiB 设计）
 // 功能：备案提交（校验+防重复）、备案查询
 // Cloudflare Workers + KV
 
 export default {
   async fetch(req, env) {
-  const u = new URL(req.url);  
+    const u = new URL(req.url);
 
-  if (u.pathname === '/api/register' && req.method === 'POST')
-    return reg(req, env);
+    if (u.pathname === '/api/register' && req.method === 'POST')  
+      return reg(req, env);
 
-  if (u.pathname === '/api/query' && req.method === 'GET')
-    return query(u, env);
+    if (u.pathname === '/api/query' && req.method === 'GET')
+      return query(u, env);
 
-  if (u.pathname === '/api/admin/delete' && req.method === 'POST')
-    return adminDelete(req, env);
+    if (u.pathname === '/api/admin/delete' && req.method === 'POST')
+      return adminDelete(req, env);
 
-  if (u.pathname === '/')
-    return page();
+    if (u.pathname === '/')
+      return page();
 
-  return new Response('404', { status: 404 });
-}
-
+    return new Response('404', { status: 404 });
+  }
 };
+
 
 // ===== 工具函数 =====
 const j = (d, s = 200) => new Response(JSON.stringify(d), { status: s, headers: { 'content-type': 'application/json;charset=utf-8' } });
@@ -32,7 +32,7 @@ const genId = () => 'VICP-' + Math.random().toString(36).slice(2, 10).toUpperCas
 // ===== 备案提交 =====
 async function reg(req, env) {
   const { site, domain, owner } = await req.json();
-  if (!site || !domain || !owner) return j({ err: '参数缺失' }, 400);
+  if (!site || !domain || !owner) return j({ err: '参数缺失' }, 400);  
   if (!okDomain(domain)) return j({ err: '域名不合法' }, 400);
 
   // 防重复：域名只能备案一次
@@ -63,7 +63,7 @@ async function query(u, env) {
 
 // ===== 页面 =====
 function page() {
-  return new Response(`<!doctype html><meta charset=utf-8><title>虚拟备案</title>
+  return new Response(`<!doctype html><meta charset=utf-8><title>虚拟备案</title>  
 <h3>备案提交</h3>
 <input id=s placeholder=网站名><input id=d placeholder=域名><input id=o placeholder=负责人>
 <button onclick=r()>提交</button>
